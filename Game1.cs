@@ -18,6 +18,8 @@ namespace GameDevProject
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            /*_graphics.HardwareModeSwitch = false;
+            _graphics.ToggleFullScreen();*/
         }
 
         protected override void Initialize()
@@ -34,7 +36,7 @@ namespace GameDevProject
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _heroTexture = Content.Load<Texture2D>("squirrel sprite sheet");
+            _heroTexture = Content.Load<Texture2D>("squirrel sprite sheet_scaled_4x_pngcrushed");
         }
 
         protected override void Update(GameTime gameTime)

@@ -30,7 +30,7 @@ namespace GameDevProject
 			CurrentFrame = frames[counter];
 
 			secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
-			int fps = 10;
+			int fps = 12;
 
 			if (secondCounter >= 1d / fps)
 			{
@@ -46,7 +46,7 @@ namespace GameDevProject
 
 
 		public void GetFramesFromTextureProperties
-			(int width, int height, int numberOfWidthSprites, int numberOfHeightSprites, int lengte, int hoogte) // voor lengte en hoogte: denken zoals array
+			(int width, int height, int numberOfWidthSprites, int numberOfHeightSprites, int lengte, int hoogte) // denken zoals array; hoogte start van boven naar onder
 		{
 			int widthOffFrame = width / numberOfWidthSprites;
 			int heightOffFrame = height / numberOfHeightSprites;
@@ -61,6 +61,15 @@ namespace GameDevProject
 						new Rectangle(x, useHeight, widthOffFrame, heightOffFrame)));
 				}
 			}
+		}
+
+		public void ClearList()
+		{
+				frames.Clear();
+				counter = 0;
+			
+			
+			
 		}
 	}
 }

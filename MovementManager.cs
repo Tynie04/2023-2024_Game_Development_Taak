@@ -10,13 +10,25 @@ namespace GameDevProject
 {
 	internal class MovementManager
 	{
+		Vector2 direction;
 		public void Move(IMovable movable)
 		{
-			Vector2 direction = movable.InputReader.ReadInput();
+			direction = movable.InputReader.ReadInput();
+
+
+
 			var afstand = direction * movable.Speed;
 			//var toekomstigePositie = movable.Position + afstand;
 			//movable.Position = toekomstigePositie;
 			movable.Position += afstand;
+		}
+		public float GetDirectionX()
+		{
+			return direction.X;
+		}
+		public Vector2 GetDirection()
+		{
+			return direction;
 		}
 	}
 }
