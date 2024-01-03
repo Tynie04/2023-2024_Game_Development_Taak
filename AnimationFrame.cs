@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace GameDevProject
 {
-	class AnimationFrame
-	{
-		public Rectangle SourceRectangle { get; set; }
-		public AnimationFrame(Rectangle sourceRectangle)
-		{
-			SourceRectangle = sourceRectangle;
-		}
-	}
+    class AnimationFrame
+    {
+        public Rectangle SourceRectangle { get; set; }
+        public AnimationFrame(Rectangle sourceRectangle)
+        {
+            SourceRectangle = sourceRectangle;
+        }
+    }
 }

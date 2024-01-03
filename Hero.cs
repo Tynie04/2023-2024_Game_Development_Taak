@@ -1,5 +1,4 @@
-﻿using GameDevProject.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct2D1;
@@ -15,14 +14,17 @@ using System.Threading.Tasks;
 
 namespace GameDevProject
 {
-	internal class Hero : IGameObject, IMovable
+    internal class Hero : IGameObject, IMovable
 	{
 		private Texture2D texture;
 		Animation animation;
 		private MovementManager movementManager;
 		Animation right = new Animation();
 		Animation left = new Animation();
-		Animation neutral = new Animation();
+		Animation neutralRight = new Animation();
+		Animation neutralLeft = new Animation();
+		direction d = Hero.direction.right;
+		GraphicsDevice g;
 		
 
 		private Vector2 Limit(Vector2 v, float max)
@@ -50,12 +52,14 @@ namespace GameDevProject
 			((IMovable)this).Speed = new Vector2(5, 5);
 			((IMovable)this).InputReader = inputReader;
 
-			neutral.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 0);
+			neutralRight.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 0);
+			neutralLeft.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 1);
 			right.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 2, 4);
 			left.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 2, 5);
-			animation = neutral;
 
+			animation = neutralRight;
 
+			
 		}
 
 
@@ -68,6 +72,7 @@ namespace GameDevProject
 		public void Update(GameTime gameTime)
 		{
 
+			
 			Move2();
 			
 			if (Keyboard.GetState().IsKeyDown(Keys.N))
@@ -76,44 +81,15 @@ namespace GameDevProject
 			}
 
 
+
 		   animation.Update(gameTime);
 
 		}
 
-		/*private void MoveWithMouse() //Werkt niet zoals zou moeten: sprite wordt niet getekend op scherm. zonder Normalisatie werkt dit wel
-        {
-            MouseState state = Mouse.GetState();
-            Vector2 mouseVector = new Vector2(state.X, state.Y);
-
-            var richting = mouseVector - positie;
-            richting.Normalize();
-            richting = Vector2.Multiply(richting, 0.1f);
-            snelheid += richting;
-            snelheid = Limit(snelheid, 10);
-            positie += snelheid;
-
-
-        }*/
-
-		/*        private void Move()
-
-				{
-					positie += snelheid;
-					if (positie.X > 800 -32
-						|| positie.X < 0)
-					{
-						snelheid.X *= -1;
-					}
-					if (positie.Y > 480-32
-						|| positie.Y < 0)
-					{
-						snelheid.Y *= -1;
-					}
-
-
-				}*/
+	
 		private void Move2()
 		{
+			
 
 			Animate(Keyboard.GetState().GetPressedKeys());
 			movementManager.Move(this);
@@ -121,24 +97,37 @@ namespace GameDevProject
 		}
 		private void Animate(Keys[] state)
 		{
-			Debug.WriteLine(state);
+			Debug.WriteLine(Position);
 			
-			if (state.Contains(Keys.Right)) {
+			if (state.Contains(Keys.Right) || state.Contains(Keys.D)) {
 
 				animation = right;
+				d = direction.right;
 				return;
 			}
-			if (state.Contains(Keys.Left))
+			if (state.Contains(Keys.Left) || state.Contains(Keys.Q))
 			{
 				animation = left;
+				d = direction.left;
 				return;
 			}
-			else
+			else if (d == direction.right)
 			{
-				animation = neutral;
+				animation = neutralRight;
+				return;
+			}
+			else if (d == direction.left)
+			{
+				animation = neutralLeft;
 				return;
 			}
 
 		}
+		private enum direction
+		{
+			left,
+			right
+		}
+
 	}
 }

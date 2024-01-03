@@ -7,69 +7,69 @@ using System.Threading.Tasks;
 
 namespace GameDevProject
 {
-	class Animation
-	{
-		public AnimationFrame CurrentFrame { get; set; }
-		private List<AnimationFrame> frames;
-		private int counter;
-		private double secondCounter = 0;
+    class Animation
+    {
+        public AnimationFrame CurrentFrame { get; set; }
+        private List<AnimationFrame> frames;
+        private int counter;
+        private double secondCounter = 0;
 
-		public Animation()
-		{
-			frames = new List<AnimationFrame>();
-		}
+        public Animation()
+        {
+            frames = new List<AnimationFrame>();
+        }
 
-		public void AddFrame(AnimationFrame frame)
-		{
-			frames.Add(frame);
-			CurrentFrame = frames[0];
-		}
+        public void AddFrame(AnimationFrame frame)
+        {
+            frames.Add(frame);
+            CurrentFrame = frames[0];
+        }
 
-		public void Update(GameTime gameTime)
-		{
-			CurrentFrame = frames[counter];
+        public void Update(GameTime gameTime)
+        {
+            CurrentFrame = frames[counter];
 
-			secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
-			int fps = 12;
+            secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            int fps = 8;
 
-			if (secondCounter >= 1d / fps)
-			{
-				counter++;
-				secondCounter = 0;
-			}
+            if (secondCounter >= 1d / fps)
+            {
+                counter++;
+                secondCounter = 0;
+            }
 
-			if (counter >= frames.Count)
-			{
-				counter = 0;
-			}
-		}
+            if (counter >= frames.Count)
+            {
+                counter = 0;
+            }
+        }
 
 
-		public void GetFramesFromTextureProperties
-			(int width, int height, int numberOfWidthSprites, int numberOfHeightSprites, int lengte, int hoogte) // denken zoals array; hoogte start van boven naar onder
-		{
-			int widthOffFrame = width / numberOfWidthSprites;
-			int heightOffFrame = height / numberOfHeightSprites;
+        public void GetFramesFromTextureProperties
+            (int width, int height, int numberOfWidthSprites, int numberOfHeightSprites, int lengte, int hoogte) // denken zoals array; hoogte start van boven naar onder
+        {
+            int widthOffFrame = width / numberOfWidthSprites;
+            int heightOffFrame = height / numberOfHeightSprites;
 
-			int useHeight = heightOffFrame * hoogte;
+            int useHeight = heightOffFrame * hoogte;
 
-			for (int y = 0; y <= lengte; y += heightOffFrame)
-			{
-				for (int x = 0; x <= widthOffFrame * lengte; x += widthOffFrame)
-				{
-					frames.Add(new AnimationFrame(
-						new Rectangle(x, useHeight, widthOffFrame, heightOffFrame)));
-				}
-			}
-		}
+            for (int y = 0; y <= lengte; y += heightOffFrame)
+            {
+                for (int x = 0; x <= widthOffFrame * lengte; x += widthOffFrame)
+                {
+                    frames.Add(new AnimationFrame(
+                        new Rectangle(x, useHeight, widthOffFrame, heightOffFrame)));
+                }
+            }
+        }
 
-		public void ClearList()
-		{
-				frames.Clear();
-				counter = 0;
-			
-			
-			
-		}
-	}
+        public void ClearList()
+        {
+            frames.Clear();
+            counter = 0;
+
+
+
+        }
+    }
 }

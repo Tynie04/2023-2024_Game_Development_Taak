@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace GameDevProject.Input
+namespace GameDevProject
 {
-	internal interface IInputReader
-	{
-		Vector2 ReadInput();
-		public bool IsDsestinationInput { get; }
-	}
+    internal interface IInputReader
+    {
+        Vector2 ReadInput();
+        public bool IsDsestinationInput { get; }
+    }
 }
