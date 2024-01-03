@@ -10,18 +10,18 @@ using System.Diagnostics;
 namespace GameDevProject
 {
 	public class Game1 : Game
-    {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private Texture2D _heroTexture;
-        private Hero hero;
-        private Texture2D[,] _tileset;
-        private int _tileWidth;
-        private int _tileHeight;
-        TileFactory tileFactory;
-        int levelHeight = 14;
-        int levelWidth = 24;
-		int[,] level =
+	{
+		private GraphicsDeviceManager _graphics;
+		private SpriteBatch _spriteBatch;
+		private Texture2D _heroTexture;
+		private Hero hero;
+		private Texture2D[,] _tileset;
+		private int _tileWidth;
+		private int _tileHeight;
+		private TileFactory tileFactory;
+		private int levelHeight = 14;
+		private int levelWidth = 24;
+		private int[,] level =
 		{
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
@@ -31,46 +31,40 @@ namespace GameDevProject
 			{4, 4, 4, 2, 1, 1, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 2, 1, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}
 
-		};
-		bool levelMade = false;
-
-
+		}
+			; // Your terrain data
+		private Texture2D terrainTexture; // Cached terrain texture
+		private bool levelMade = false;
 
 		public Game1()
-        {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-            /*_graphics.HardwareModeSwitch = false;
-            _graphics.ToggleFullScreen();*/
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.ApplyChanges();
+		{
+			_graphics = new GraphicsDeviceManager(this);
+			Content.RootDirectory = "Content";
+			IsMouseVisible = true;
+			_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+			_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+			_graphics.ApplyChanges();
 		}
 
-        protected override void Initialize()
-        {
-            // TODO: Add the initialization logic here
-            
-            base.Initialize();
-            hero = new Hero(_heroTexture, new KeyboardReader());
+		protected override void Initialize()
+		{
+			base.Initialize();
+			hero = new Hero(_heroTexture, new KeyboardReader());
 		}
 
-		protected override async void LoadContent()
+		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// Load hero texture
 			_heroTexture = Content.Load<Texture2D>("squirrel sprite sheet_scaled_4x_pngcrushed");
 
-			// Load tilesets
 			Texture2D[,] tileTextures = new Texture2D[,]
 			{
 				{ Content.Load<Texture2D>("ground_scaled_5x_pngcrushed") },
@@ -78,17 +72,14 @@ namespace GameDevProject
 				{ Content.Load<Texture2D>("platformLeft_scaled_5x_pngcrushed")},
 				{ Content.Load<Texture2D>("platformRight_scaled_5x_pngcrushed")},
 				{ Content.Load<Texture2D>("background_blue") }
-				// Add more tile types as needed
-			};
+                // Add more tile types as needed
+            };
 
-			// Initialize tileset dimensions
-			_tileWidth = 80;  
-			_tileHeight = 80; 
+			_tileWidth = 80;
+			_tileHeight = 80;
 
-			// Assign the loaded textures to _tileset
 			_tileset = tileTextures;
 
-			// Create TileFactory
 			tileFactory = new TileFactory(_tileset, _tileWidth, _tileHeight);
 
 			for (int i = 0; i < tileTextures.GetLength(0); i++)
@@ -98,47 +89,60 @@ namespace GameDevProject
 					Debug.WriteLine($"Loaded texture at index ({i}, {j}): {_tileset[i, j].Name}");
 				}
 			}
+
+			// Generate the terrain texture during initialization
+			GenerateTerrainTexture();
 		}
 
+		private void GenerateTerrainTexture()
+		{
+			RenderTarget2D renderTarget = new RenderTarget2D(
+				GraphicsDevice,
+				levelWidth * _tileWidth,
+				levelHeight * _tileHeight
+			);
 
+			GraphicsDevice.SetRenderTarget(renderTarget);
+			GraphicsDevice.Clear(Color.Transparent);
+
+			_spriteBatch.Begin();
+
+			for (int y = 0; y < levelHeight; y++)
+			{
+				for (int x = 0; x < levelWidth; x++)
+				{
+					int tileIndex = level[y, x];
+					Vector2 position = new Vector2(x * _tileWidth, y * _tileHeight);
+                    BackGround.Tile tile = tileFactory.CreateTile(tileIndex, position);
+					tile.Draw(_spriteBatch);
+				}
+			}
+
+			_spriteBatch.End();
+
+			GraphicsDevice.SetRenderTarget(null);
+
+			terrainTexture = renderTarget;
+		}
 
 		protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+		{
+			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+				Exit();
 
-			// TODO: Add the update logic here
+			hero.Update(gameTime);
 
-			
-
-            hero.Update(gameTime);
-			
-            base.Update(gameTime);
-        }
+			base.Update(gameTime);
+		}
 
 		protected override void Draw(GameTime gameTime)
 		{
-			
 			GraphicsDevice.Clear(Color.Green);
 
 			_spriteBatch.Begin();
 
-			/*if (!levelMade)
-			{*/
-				for (int y = 0; y < levelHeight; y++)
-				{
-					for (int x = 0; x < levelWidth; x++)
-					{
-						int tileIndex = level[y, x];
-						Vector2 position = new Vector2(x * _tileWidth, y * _tileHeight);
-						GameDevProject.BackGround.Tile tile = tileFactory.CreateTile(tileIndex, position);
-						tile.Draw(_spriteBatch);
-						Debug.WriteLine("making tile: " + tile.Position + " with texture: " + tile.Texture);
-					}
-				}
-				levelMade = true;
-			/*}*/
-			// Draw the tilemap
+			// Draw the cached terrain texture
+			_spriteBatch.Draw(terrainTexture, Vector2.Zero, Color.White);
 
 			// Draw the hero on top of the tilemap
 			hero.Draw(_spriteBatch);
@@ -147,11 +151,5 @@ namespace GameDevProject
 
 			base.Draw(gameTime);
 		}
-		private void MakeLevel()
-		{
-
-		}
-
-
 	}
 }

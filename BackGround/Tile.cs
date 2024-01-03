@@ -14,7 +14,7 @@ namespace GameDevProject.BackGround
 		public Rectangle SourceRectangle { get; set; }
 		public Vector2 Position { get; set; }
 
-		public async void Draw(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(
 				Texture,
