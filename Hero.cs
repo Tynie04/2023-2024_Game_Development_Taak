@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameDevProject.Physics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct2D1;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace GameDevProject
 {
-    internal class Hero : IGameObject, IMovable
+	internal class Hero : IGameObject, IMovable, IGravityAffected
 	{
 		private Texture2D texture;
 		Animation animation;
@@ -24,32 +25,23 @@ namespace GameDevProject
 		Animation neutralRight = new Animation();
 		Animation neutralLeft = new Animation();
 		direction d = Hero.direction.right;
-		GraphicsDevice g;
-		
-
-		private Vector2 Limit(Vector2 v, float max)
-		{
-			if (v.Length() > max)
-			{
-				var ratio = max / v.Length();
-				v.X *= ratio;
-				v.Y *= ratio;
-			}
-			return v;
-		}
+		public GravityComponent Gravity { get; set; }
 
 		public Vector2 Position { get; set; }
 		public Vector2 Speed { get; set; }
 		IInputReader IMovable.InputReader { get; set; }
+		public Rectangle Bounds;
 
 		public Hero(Texture2D texture, IInputReader inputReader)
 		{
 			movementManager = new MovementManager();
 			this.texture = texture;
 			animation = new Animation();
+			Gravity = new GravityComponent();
+
 
 			((IMovable)this).Position = new Vector2(0, 0);
-			((IMovable)this).Speed = new Vector2(5, 5);
+			((IMovable)this).Speed = new Vector2(5, 0);
 			((IMovable)this).InputReader = inputReader;
 
 			neutralRight.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 0);
@@ -57,9 +49,10 @@ namespace GameDevProject
 			right.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 2, 4);
 			left.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 2, 5);
 
-			animation = neutralRight;
+			animation = right;
 
-			
+			Bounds = new Rectangle(0, 0, texture.Width / 8, texture.Height / 8);
+
 		}
 
 
@@ -67,26 +60,46 @@ namespace GameDevProject
 		{
 			spriteBatch.Draw(texture, ((IMovable)this).Position, animation.CurrentFrame.SourceRectangle, Color.White);
 
+
+			// Update the position of the bounding box
+			Bounds.X = (int)((IMovable)this).Position.X;
+			Bounds.Y = (int)((IMovable)this).Position.Y;
+
+			//debugging
+			if (Keyboard.GetState().IsKeyDown(Keys.B))
+			{
+				// Draw the bounding box (for visualization purposes)
+				Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+				pixel.SetData(new[] { Color.Red });
+
+				spriteBatch.Draw(pixel, Bounds, Color.Red);
+			}
+
 		}
 
 		public void Update(GameTime gameTime)
 		{
 
-			
+
 			Move2();
-			
+
 			if (Keyboard.GetState().IsKeyDown(Keys.N))
 			{
 				//for debugging purposes
 			}
 
+			GravityProcessor.ApplyGravity(this, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-
-		   animation.Update(gameTime);
+			animation.Update(gameTime);
 
 		}
 
-	
+		public void UpdatePosition(Vector2 newPosition)
+		{
+			Position = newPosition;
+		}
+
+
 		private void Move2()
 		{
 			

@@ -34,14 +34,20 @@ namespace GameDevProject.BackGround
 			// Use a switch statement to create the appropriate subclass based on tileType
 			switch (tileType)
 			{
-				case 0: // GrassTile
-					newTile = new GrassTile();
-					break;
-				case 1: // GroundTile
+				case 0: // ground
 					newTile = new GroundTile();
 					break;
-				case 2: // PlatformTile
+				case 1: // GroundTile
+					newTile = new GrassTile();
+					break;
+				case 2: // PlatformLeft
 					newTile = new PlatformTile();
+					break;
+				case 3: // PlatformRight
+					newTile = new PlatformTile();
+					break;
+				case 4: // Sky
+					newTile = new GroundTile();
 					break;
 				// Add more cases as needed for different tile types
 				default:
