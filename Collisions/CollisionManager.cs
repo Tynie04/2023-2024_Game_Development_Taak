@@ -1,4 +1,5 @@
 ﻿using GameDevProject.BackGround;
+using GameDevProject.Enemies;
 using GameDevProject.Physics;
 using Microsoft.Xna.Framework;
 using System;
@@ -37,6 +38,7 @@ using System.Threading.Tasks;
 							hero.Gravity.Reset(); // Reset gravity component
 							collisionDetected = true;
 
+
 							// Handle other types of tiles if needed
 						}
 					}
@@ -44,7 +46,39 @@ using System.Threading.Tasks;
 
 				return collisionDetected;
 			}
+		internal bool CheckEnemyCollisions(BaseEnemy enemy, SolidTile[,] tiles)
+		{
+			bool collisionDetected = false;
+
+			for (int y = 0; y < tiles.GetLength(0); y++)
+			{
+				for (int x = 0; x < tiles.GetLength(1); x++)
+				{
+					SolidTile tile = tiles[y, x];
+
+					// Skip null tiles (assuming they represent sky tiles)
+					if (tile == null)
+					{
+						continue;
+					}
+
+					// Check collision with the enemy
+					if (enemy.Bounds.Intersects(tile.Bounds))
+					{
+						// Stop falling
+						enemy.Position = new Vector2(enemy.Position.X, tile.Bounds.Top - enemy.Bounds.Height);
+						enemy.Speed = new Vector2(enemy.Speed.X, Math.Max(0, enemy.Speed.Y)); // Retain the current vertical speed, but ensure it's not negative
+						enemy.Gravity.Reset(); // Reset gravity component
+						collisionDetected = true;
+
+						// Handle other types of tiles if needed
+					}
+				}
+			}
+
+			return collisionDetected;
 		}
+	}
 	}
 
 

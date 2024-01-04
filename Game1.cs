@@ -2,6 +2,7 @@
 using GameDevProject.BackGround;
 using GameDevProject.BackGround.TileTypes;
 using GameDevProject.Collisions;
+using GameDevProject.Enemies.Ghoul;
 using GameDevProject.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,7 @@ namespace GameDevProject
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 		private Texture2D _heroTexture;
+		private Texture2D _ghoulTexture;
 		private Hero hero;
 		private Texture2D[,] _tileset;
 		private int _tileWidth;
@@ -45,6 +47,7 @@ namespace GameDevProject
 		private bool levelMade = false;
 		private CollisionManager collisionManager;
 		private SolidTile[,] tiles;
+		private GhoulEnemy ghoul;
 
 		public Game1()
 		{
@@ -60,12 +63,14 @@ namespace GameDevProject
 		{
 			base.Initialize();
 			hero = new Hero(_heroTexture, new KeyboardReader());
+			ghoul = new GhoulEnemy(new Vector2(800, 850),_ghoulTexture, 200);
 		}
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			_heroTexture = Content.Load<Texture2D>("squirrel sprite sheet_scaled_4x_pngcrushed");
+			_ghoulTexture = Content.Load<Texture2D>("Ghoul Sprite Sheet_scaled_4x_pngcrushed");
 
 			Texture2D[,] tileTextures = new Texture2D[,]
 			{
@@ -172,13 +177,19 @@ namespace GameDevProject
 
 			// Step 2: Check collisions with tiles
 			bool tileCollision = collisionManager.CheckTileCollisions(hero, tiles);
+			bool tileCollision2 = collisionManager.CheckEnemyCollisions(ghoul, tiles);
 
 			// Step 3: Update hero's position based on collision result and gravity
-			if (!tileCollision)
+			if (!tileCollision )
 			{
 				hero.Position += hero.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 			}
+			if (tileCollision2)
+			{
+				ghoul.Position += ghoul.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+			}
 			hero.Update(gameTime);
+			ghoul.Update(gameTime);
 
 			// Check collisions with tiles
 			
@@ -197,6 +208,8 @@ namespace GameDevProject
 
 			// Draw the hero on top of the tilemap
 			hero.Draw(_spriteBatch);
+
+			ghoul.Draw(_spriteBatch);
 
 			_spriteBatch.End();
 

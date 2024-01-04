@@ -40,7 +40,7 @@ namespace GameDevProject
 			Gravity = new GravityComponent();
 
 
-			((IMovable)this).Position = new Vector2(0, 0);
+			((IMovable)this).Position = new Vector2(0, 850);
 			((IMovable)this).Speed = new Vector2(5, 20);
 			((IMovable)this).InputReader = inputReader;
 
