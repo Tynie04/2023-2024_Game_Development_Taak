@@ -41,7 +41,7 @@ namespace GameDevProject
 
 
 			((IMovable)this).Position = new Vector2(0, 0);
-			((IMovable)this).Speed = new Vector2(5, 0);
+			((IMovable)this).Speed = new Vector2(5, 5);
 			((IMovable)this).InputReader = inputReader;
 
 			neutralRight.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 0);
@@ -51,7 +51,7 @@ namespace GameDevProject
 
 			animation = right;
 
-			Bounds = new Rectangle(0, 0, texture.Width / 8, texture.Height / 8);
+			Bounds = new Rectangle(0, 0, (texture.Width / 8) -20, (texture.Height / 8)-20);
 
 		}
 

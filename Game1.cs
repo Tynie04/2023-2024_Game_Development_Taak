@@ -1,10 +1,11 @@
 ﻿using Accessibility;
 using GameDevProject.BackGround;
 using GameDevProject.BackGround.TileTypes;
+using GameDevProject.Collisions.GameDevProject.Collisions;
+using GameDevProject.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1.Effects;
 using System.Diagnostics;
 
 namespace GameDevProject
@@ -42,7 +43,8 @@ namespace GameDevProject
 			; // Your terrain data
 		private Texture2D terrainTexture; // Cached terrain texture
 		private bool levelMade = false;
-		private bool highlightBoundingBoxes = false;
+		private CollisionManager collisionManager;
+		private SolidTile[,] tiles;
 
 		public Game1()
 		{
@@ -59,7 +61,6 @@ namespace GameDevProject
 			base.Initialize();
 			hero = new Hero(_heroTexture, new KeyboardReader());
 		}
-
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -73,8 +74,8 @@ namespace GameDevProject
 				{ Content.Load<Texture2D>("platformLeft_scaled_5x_pngcrushed")},
 				{ Content.Load<Texture2D>("platformRight_scaled_5x_pngcrushed")},
 				{ Content.Load<Texture2D>("background_blue") }
-                // Add more tile types as needed
-            };
+				// Add more tile types as needed
+			};
 
 			_tileWidth = 80;
 			_tileHeight = 80;
@@ -91,9 +92,43 @@ namespace GameDevProject
 				}
 			}
 
+			// Generate the terrain first
+			tiles = GenerateTerrain();
+
 			// Generate the terrain texture during initialization
 			GenerateTerrainTexture();
+			collisionManager = new CollisionManager();
 		}
+
+		private SolidTile[,] GenerateTerrain()
+		{
+			SolidTile[,] tiles = new SolidTile[levelHeight, levelWidth];
+
+			for (int y = 0; y < levelHeight; y++)
+			{
+				for (int x = 0; x < levelWidth; x++)
+				{
+					int tileIndex = level[y, x];
+					Vector2 position = new Vector2(x * _tileWidth, y * _tileHeight);
+
+					// Create the solid tile
+					SolidTile tile = tileFactory.CreateSolidTile(tileIndex, position);
+
+					// Use a default non-solid tile for sky tiles
+					if (tileIndex != 4)  // Assuming 4 is the index for sky tiles
+					{
+						tiles[y, x] = tile;
+					}
+					else
+					{
+						tiles[y, x] = new SolidTile(false);  // Sky tile is not solid
+					}
+				}
+			}
+
+			return tiles;
+		}
+
 
 		private void GenerateTerrainTexture()
 		{
@@ -114,7 +149,7 @@ namespace GameDevProject
 				{
 					int tileIndex = level[y, x];
 					Vector2 position = new Vector2(x * _tileWidth, y * _tileHeight);
-                    BackGround.Tile tile = tileFactory.CreateTile(tileIndex, position);
+                    BackGround.Tile tile = tileFactory.CreateSolidTile(tileIndex, position);
 					tile.Draw(_spriteBatch);
 				}
 			}
@@ -131,7 +166,21 @@ namespace GameDevProject
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
+			// Step 1: Apply Gravity
+			GravityProcessor.ApplyGravity(hero, (float)gameTime.ElapsedGameTime.TotalSeconds);
+
+			// Step 2: Check collisions with tiles
+			bool tileCollision = collisionManager.CheckTileCollisions(hero, tiles);
+
+			// Step 3: Update hero's position based on collision result and gravity
+			if (!tileCollision)
+			{
+				hero.Position += hero.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+			}
 			hero.Update(gameTime);
+
+			// Check collisions with tiles
+			
 
 			base.Update(gameTime);
 		}
@@ -147,7 +196,6 @@ namespace GameDevProject
 
 			// Draw the hero on top of the tilemap
 			hero.Draw(_spriteBatch);
-
 
 			_spriteBatch.End();
 

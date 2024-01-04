@@ -14,7 +14,7 @@ namespace GameDevProject.Physics
 			if (entity.Gravity.IsAffectedByGravity)
 			{
 				// Update the entity's position based on gravity force
-				Vector2 newPosition = new Vector2(entity.Position.X, entity.Position.Y + entity.Gravity.GravityForce * deltaTime);
+				Vector2 newPosition = new Vector2(entity.Position.X, entity.Position.Y + entity.Gravity.Gravity * deltaTime);
 				entity.UpdatePosition(newPosition);
 			}
 

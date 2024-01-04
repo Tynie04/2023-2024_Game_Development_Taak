@@ -14,7 +14,7 @@ namespace GameDevProject.BackGround
 		public Texture2D Texture { get; set; }
 		public Rectangle SourceRectangle { get; set; }
 		public Vector2 Position { get; set; }
-		public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, SourceRectangle.Width, SourceRectangle.Height);
+		public Rectangle Bounds { get; set; }
 
 
 		public void Draw(SpriteBatch spriteBatch)

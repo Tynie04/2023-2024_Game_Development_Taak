@@ -17,7 +17,7 @@ namespace GameDevProject.BackGround
 			_tileHeight = tileHeight;
 		}
 
-		public Tile CreateTile(int tileType, Vector2 position)
+		public SolidTile CreateSolidTile(int tileType, Vector2 position)
 		{
 			int tilesetIndex = tileType / _tileTextures.GetLength(1);
 			int localTileIndex = tileType % _tileTextures.GetLength(1);
@@ -29,29 +29,24 @@ namespace GameDevProject.BackGround
 
 			Rectangle sourceRect = new Rectangle(col * _tileWidth, row * _tileHeight, _tileWidth, _tileHeight);
 
-			Tile newTile;
+			SolidTile newTile;
 
-			// Use a switch statement to create the appropriate subclass based on tileType
 			switch (tileType)
 			{
 				case 0: // ground
-					newTile = new GroundTile();
-					break;
-				case 1: // GroundTile
-					newTile = new GrassTile();
-					break;
+				case 1: // GrassTile
 				case 2: // PlatformLeft
-					newTile = new PlatformTile();
-					break;
 				case 3: // PlatformRight
-					newTile = new PlatformTile();
+					newTile = new SolidTile(true); // Make these tiles solid
+					newTile.Bounds = new Rectangle((int)position.X, (int)position.Y, _tileWidth, _tileHeight); // Set correct width and height
 					break;
 				case 4: // Sky
-					newTile = new GroundTile();
+					newTile = new SolidTile(false); // Sky tile is not solid
 					break;
 				// Add more cases as needed for different tile types
 				default:
-					newTile = new Tile();
+					newTile = new SolidTile(true); // Default to solid
+					newTile.Bounds = new Rectangle((int)position.X, (int)position.Y, _tileWidth, _tileHeight); // Set correct width and height
 					break;
 			}
 
