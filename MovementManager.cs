@@ -44,6 +44,6 @@ namespace GameDevProject
 			}
 		}
 
-		private const float jumpForce = 300f; // Adjust this value based on your game's physics
+		private const float jumpForce = 325f; // Adjust this value based on your game's physics
 	}
 }

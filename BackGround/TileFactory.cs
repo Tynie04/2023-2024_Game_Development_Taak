@@ -43,7 +43,7 @@ namespace GameDevProject.BackGround
 				case 4: // Sky
 					newTile = new SolidTile(false); // Sky tile is not solid
 					break;
-				// Add more cases as needed for different tile types
+				case 5: //PlatformMiddle
 				default:
 					newTile = new SolidTile(true); // Default to solid
 					newTile.Bounds = new Rectangle((int)position.X, (int)position.Y, _tileWidth, _tileHeight); // Set correct width and height
