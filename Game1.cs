@@ -1,7 +1,7 @@
 ﻿using Accessibility;
 using GameDevProject.BackGround;
 using GameDevProject.BackGround.TileTypes;
-using GameDevProject.Collisions.GameDevProject.Collisions;
+using GameDevProject.Collisions;
 using GameDevProject.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

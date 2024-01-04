@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameDevProject.Collisions
-{
+
 	namespace GameDevProject.Collisions
 	{
 		public class CollisionManager
@@ -29,21 +28,16 @@ namespace GameDevProject.Collisions
 							continue;
 						}
 
-
 						// Check collision with the hero
 						if (hero.Bounds.Intersects(tile.Bounds))
 						{
-							
-							
-							
-									hero.Position = new Vector2(hero.Position.X, tile.Bounds.Top - hero.Bounds.Height);
-									hero.Speed = new Vector2(hero.Speed.X, 0); // Stop falling
-									hero.Gravity.Reset(); // Reset gravity component
-							
-							 
-							// Handle other types of tiles if needed
-
+							// Stop falling
+							hero.Position = new Vector2(hero.Position.X, tile.Bounds.Top - hero.Bounds.Height);
+							hero.Speed = new Vector2(hero.Speed.X, Math.Max(0, hero.Speed.Y)); // Retain the current vertical speed, but ensure it's not negative
+							hero.Gravity.Reset(); // Reset gravity component
 							collisionDetected = true;
+
+							// Handle other types of tiles if needed
 						}
 					}
 				}
@@ -52,5 +46,5 @@ namespace GameDevProject.Collisions
 			}
 		}
 	}
-}
+
 

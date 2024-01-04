@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace GameDevProject
 {
-    internal interface IMovable
-    {
-        public Vector2 Position { get; set; }
-        public Vector2 Speed { get; set; }
-        public IInputReader InputReader { get; set; }
-
+	internal interface IMovable
+	{
+		Vector2 Position { get; set; }
+		Vector2 Speed { get; set; }
+		IInputReader InputReader { get; set; }
 		void UpdatePosition(Vector2 newPosition);
-        GravityComponent Gravity { get; set; }
+		GravityComponent Gravity { get; set; }
 	}
 }

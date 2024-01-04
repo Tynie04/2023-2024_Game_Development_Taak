@@ -10,7 +10,7 @@ namespace GameDevProject.Physics
 	public class GravityComponent
 	{
 		public Vector2 Velocity { get; set; }
-		public float Gravity { get; private set; } = 150f;
+		public float Gravity { get; private set; } = 200f;
 		public bool IsAffectedByGravity { get; set; } = true;
 
 		public bool IsFalling => Velocity.Y > 0;

@@ -13,13 +13,23 @@ namespace GameDevProject.Physics
 		{
 			if (entity.Gravity.IsAffectedByGravity)
 			{
-				// Update the entity's position based on gravity force
-				Vector2 newPosition = new Vector2(entity.Position.X, entity.Position.Y + entity.Gravity.Gravity * deltaTime);
+				// Update the entity's velocity based on gravity force
+				entity.Gravity.Velocity += new Vector2(0, entity.Gravity.Gravity) * deltaTime;
+
+				// Update the entity's position based on velocity
+				Vector2 newPosition = new Vector2(entity.Position.X, entity.Position.Y + entity.Gravity.Velocity.Y * deltaTime);
 				entity.UpdatePosition(newPosition);
 			}
+		}
 
-			// Other gravity-related logic specific to the entity...
+		public static void ApplyJumpForce(IMovable entity, float jumpForce, float deltaTime)
+		{
+			// Update the entity's velocity based on upward force (jump)
+			entity.Gravity.Velocity = new Vector2(entity.Gravity.Velocity.X, -jumpForce);
+
+			// Update the entity's position based on velocity
+			Vector2 newPosition = new Vector2(entity.Position.X, entity.Position.Y + entity.Gravity.Velocity.Y * deltaTime);
+			entity.UpdatePosition(newPosition);
 		}
 	}
-
 }

@@ -41,7 +41,7 @@ namespace GameDevProject
 
 
 			((IMovable)this).Position = new Vector2(0, 0);
-			((IMovable)this).Speed = new Vector2(5, 5);
+			((IMovable)this).Speed = new Vector2(5, 20);
 			((IMovable)this).InputReader = inputReader;
 
 			neutralRight.GetFramesFromTextureProperties(texture.Width, texture.Height, 8, 8, 7, 0);
@@ -51,7 +51,7 @@ namespace GameDevProject
 
 			animation = right;
 
-			Bounds = new Rectangle(0, 0, (texture.Width / 8) -20, (texture.Height / 8)-20);
+			Bounds = new Rectangle(0, 0, (texture.Width / 8) -25, (texture.Height / 8)-25);
 
 		}
 
@@ -81,7 +81,7 @@ namespace GameDevProject
 		{
 
 
-			Move2();
+			Move2(gameTime);
 
 			if (Keyboard.GetState().IsKeyDown(Keys.N))
 			{
@@ -100,12 +100,12 @@ namespace GameDevProject
 		}
 
 
-		private void Move2()
+		private void Move2(GameTime time)
 		{
 			
 
 			Animate(Keyboard.GetState().GetPressedKeys());
-			movementManager.Move(this);
+			movementManager.Move(this, time);
 			
 		}
 		private void Animate(Keys[] state)
